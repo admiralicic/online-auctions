@@ -10,10 +10,10 @@ var passport = require('passport');
 
 var environment = process.env.NODE_ENV;
 
-require('./models/db');
-require('./config/passport');
+require('./src/server/models/db');
+require('./src/server/config/passport');
 
-var routes = require('./routes/api');
+var routes = require('./src/server/routes/api');
 
 var app = express();
 
@@ -27,6 +27,7 @@ app.use(cookieParser());
 
 app.use('/api', routes);
 
+//var rootPath = path.normalize(__dirname + '/../../');
 switch (environment) {
   case 'production':
     console.log('** BUILD **');
@@ -35,8 +36,9 @@ switch (environment) {
     break;
   default:
     console.log('** DEV **');
-    app.use(express.static('./src/client/'));
-    app.use('/*', express.static('./src/client/index.html'));
+    app.use(express.static(path.join(__dirname, 'build')));
+    app.use(express.static(path.join(__dirname, 'src', 'client')));
+    app.use('/*', express.static(path.join(__dirname, 'src', 'client', 'index.html')));
     break;
 }
 
